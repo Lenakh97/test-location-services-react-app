@@ -6,14 +6,16 @@ import Amplify, { Auth } from 'aws-amplify';
 import Location from "aws-sdk/clients/location";
 import awsconfig from './aws-exports';
 import { create } from 'domain';
-import { createMap } from "maplibre-gl-js-amplify"; 
+import { createMap, createAmplifyGeocoder } from "maplibre-gl-js-amplify"; 
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect } from 'react';
 import { drawPoints } from "maplibre-gl-js-amplify";
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+import "maplibre-gl-js-amplify/dist/public/amplify-geocoder.css"; // Optional CSS for Amplify recommended styling
 
 Amplify.configure(awsconfig);
-
-const mapName = "Lenas_map"
 
 const createClient = async () => {
     const credentials = await Auth.currentCredentials();
@@ -25,62 +27,19 @@ const createClient = async () => {
 }
 
 async function initializeMap() {
+  const el = document.createElement("div");
+    el.setAttribute("id", "map");
+    document.body.appendChild(el);
   const map = await createMap({
       container: "map", // An HTML Element or HTML element ID to render the map in https://maplibre.org/maplibre-gl-js-docs/api/map/
       center: [-73.98597609730648, 40.751874635721734], // center in New York
       zoom: 11,
   })
-  return map;
-}
-/*
-function addRestaurantLocations(map:Promise<maplibregl.Map>) {
-  map.on("load", function () {
-    drawPoints("mySourceName", // Arbitrary source name
-        [
-            {
-              coordinates: [-73.98709247500821, 40.718839863699905],
-              title: "My Restaurant - Lower East Side",
-              address: "102 Norfolk St, New York, NY 10002",
-            },
-            {
-              coordinates: [-73.9893305444102, 40.76329636720047],
-              title: "My Restaurant - Hell's Kitchen",
-              address: "725 9th Ave, New York, NY 10019",
-            },
-            {
-              coordinates: [-73.95621342276895, 40.77225519589616],
-              title: "My Restaurant - Upper East Side",
-              address: "300 E 77th St, New York, NY 10075",
-            },
-        ], // An array of coordinate data, an array of Feature data, or an array of [NamedLocations](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8)
-        map,
-        {
-            showCluster: true,
-            unclusteredOptions: {
-                showMarkerPopup: true,
-            },
-            clusterOptions: {
-                showCount: true,
-            },
-        }
-    );
-  });
-}*/
-
+  map.addControl(createAmplifyGeocoder());}
 
 function App() {
-  const client = createClient;
-  /*const params = {
-    IndexName: "MyPlaceIndex",
-    Position: [78.6165983, 13.2783941]
-  };
-  client.searchPlaceIndexForPosition(params, (err:Error, data:any) => {
-    if (err) console.error(err)
-    if (data) console.log(data)
-  })*/
   useEffect(() => {
     const map = initializeMap();
-    //addRestaurantLocations(map);
   }, []);
   
   return (

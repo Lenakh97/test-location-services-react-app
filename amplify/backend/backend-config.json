@@ -32,6 +32,22 @@
       "service": "Map",
       "mapStyle": "VectorEsriStreets",
       "accessType": "AuthorizedAndGuestUsers"
+    },
+    "LenasPlaceIndex": {
+      "isDefault": true,
+      "providerPlugin": "awscloudformation",
+      "service": "PlaceIndex",
+      "dataProvider": "HERE",
+      "dataSourceIntendedUse": "SingleUse",
+      "accessType": "AuthorizedAndGuestUsers"
+    },
+    "PlaceIndex2": {
+      "isDefault": false,
+      "providerPlugin": "awscloudformation",
+      "service": "PlaceIndex",
+      "dataProvider": "Here",
+      "dataSourceIntendedUse": "SingleUse",
+      "accessType": "AuthorizedAndGuestUsers"
     }
   }
 }
