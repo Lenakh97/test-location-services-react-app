@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "locationservicestestfac9e0a3": {}
+        "locationservicestestfac9e0a3": {},
+        "true": {}
       }
     }
   }

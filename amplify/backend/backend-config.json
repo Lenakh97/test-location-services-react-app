@@ -24,5 +24,14 @@
         ]
       }
     }
+  },
+  "geo": {
+    "map0dd2b65d": {
+      "isDefault": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Map",
+      "mapStyle": "VectorEsriStreets",
+      "accessType": "AuthorizedAndGuestUsers"
+    }
   }
 }

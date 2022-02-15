@@ -11,6 +11,8 @@
     "@types/node": "^16.11.22",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "maplibre-gl": "^1.15.2",
+    "maplibre-gl-js-amplify": "^1.2.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
@@ -43,7 +45,7 @@
     ]
   },
   "devDependencies": {
-    "aws-amplify": "4.3.14",
+    "aws-amplify": "^4.3.14",
     "aws-sdk": "2.1070.0"
   }
 }
