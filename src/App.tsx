@@ -37,6 +37,14 @@ async function updateTracker() {
     credentials,
     region: awsconfig.aws_project_region 
     });
+    const params = {
+      IndexName: "LenasPlaceIndex-dev",
+      Position: [78.6165983, 13.2783941]
+    };
+    location.searchPlaceIndexForPosition(params, (err:Error, data:object) => {
+      if (err) console.error(err)
+      if (data) console.log(data)
+    })
   const rsp = await location.batchUpdateDevicePosition({
   TrackerName: "MyTracker",
   Updates: [
