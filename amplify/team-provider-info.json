@@ -15,6 +15,12 @@
       "auth": {
         "locationservicestestfac9e0a3": {},
         "true": {}
+      },
+      "function": {
+        "locationservicestestdf8a2fb9": {
+          "deploymentBucketName": "amplify-locationservicestest-dev-132256-deployment",
+          "s3Key": "amplify-builds/locationservicestestdf8a2fb9-68626a5a412f686d692f-build.zip"
+        }
       }
     }
   }

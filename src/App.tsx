@@ -15,16 +15,9 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import "maplibre-gl-js-amplify/dist/public/amplify-geocoder.css"; // Optional CSS for Amplify recommended styling
 
-Amplify.configure(awsconfig);
+const AWS = require("aws-sdk");
 
-const createClient = async () => {
-    const credentials = await Auth.currentCredentials();
-    const client = new Location({
-        credentials,
-        region: awsconfig.aws_project_region,
-   });
-   return client;
-}
+Amplify.configure(awsconfig);
 
 async function initializeMap() {
   const el = document.createElement("div");
@@ -37,10 +30,37 @@ async function initializeMap() {
   })
   map.addControl(createAmplifyGeocoder());}
 
+async function updateTracker() {
+  // Send device position updates
+  const credentials = await Auth.currentCredentials();
+  var location = new AWS.Location({
+    credentials,
+    region: awsconfig.aws_project_region 
+    });
+  const rsp = await location.batchUpdateDevicePosition({
+  TrackerName: "MyTracker",
+  Updates: [
+    {
+      DeviceId: "ExampleDevice-12",
+      Position: [-123.4567, 45.6789],
+      SampleTime: "2022-02-14T19:09:07.327Z"
+    },
+    {
+      DeviceId: "ExampleDevice-23",
+      Position: [-123.123, 45.123],
+      SampleTime: "2022-02-14T19:10:32Z"
+    } 
+  ]
+})
+.promise()
+}
+
 function App() {
   useEffect(() => {
     const map = initializeMap();
+    const trackerupdate = updateTracker();
   }, []);
+  
   
   return (
     <div className="App">

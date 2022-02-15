@@ -27,5 +27,13 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "Arn": "string"
         }
+    },
+    "function": {
+        "locationservicestestdf8a2fb9": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        }
     }
 }

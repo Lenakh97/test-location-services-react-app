@@ -49,5 +49,12 @@
       "dataSourceIntendedUse": "SingleUse",
       "accessType": "AuthorizedAndGuestUsers"
     }
+  },
+  "function": {
+    "locationservicestestdf8a2fb9": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
   }
 }
