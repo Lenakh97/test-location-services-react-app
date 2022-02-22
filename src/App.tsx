@@ -63,13 +63,49 @@ async function updateTracker() {
 .promise()
 }
 
+async function calculateRoute() {
+  const credentials = await Auth.currentCredentials();
+    var location = new AWS.Location({
+      credentials,
+      region: awsconfig.aws_project_region 
+      }); 
+
+  let parameter = {
+    CalculatorName: "route_calculator",
+    DeparturePosition: [-123.4567, 45.6789],
+    DestinationPosition: [-123.123, 45.123]
+  };
+
+  location.calculateRoute(parameter, (err:Error, data:{Legs: Array<object>, Summary: Object}) => {
+    if (err) console.log(err);
+    if (data) console.log(data.Legs[0]);
+  });
+}
+
+async function showGeofences() {
+  const credentials = await Auth.currentCredentials();
+    var location = new AWS.Location({
+      credentials,
+      region: awsconfig.aws_project_region 
+      }); 
+
+  let parameter = {
+    CollectionName: "eta-geofence-collection"
+  };
+
+  location.listGeofences(parameter, (err:Error, data:object) => {
+    if (err) console.log(err);
+    if (data) console.log(data);
+  });
+}
+
 function App() {
   useEffect(() => {
     const map = initializeMap();
     const trackerupdate = updateTracker();
+    const calculateroute = calculateRoute();
+    const showGeo = showGeofences();
   }, []);
-  
-  
   return (
     <div className="App">
       <h1>My Restaurant</h1>
@@ -79,6 +115,7 @@ function App() {
                 <li><b>My Restaurant - Lower East Side</b><br/> 102 Norfolk St, New York, NY 10002</li>
             </ul>
             <div id="map"></div>
+            <h2>Route distance:</h2>
     </div>
   );
 }
