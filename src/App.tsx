@@ -1,10 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import { AmplifyProvider, withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 import Amplify, { Auth } from 'aws-amplify';
 import Location from "aws-sdk/clients/location";
-import awsconfig from './aws-exports';
+import { Geo } from "aws-amplify";
 import { create } from 'domain';
 import { createMap, createAmplifyGeocoder } from "maplibre-gl-js-amplify"; 
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -14,9 +15,11 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import "maplibre-gl-js-amplify/dist/public/amplify-geocoder.css"; // Optional CSS for Amplify recommended styling
+import awsconfig from './aws-exports';
+import cluster from 'cluster';
+import * as turf from "@turf/turf"
 
 const AWS = require("aws-sdk");
-
 Amplify.configure(awsconfig);
 
 async function initializeMap() {
@@ -25,12 +28,110 @@ async function initializeMap() {
     document.body.appendChild(el);
   const map = await createMap({
       container: "map", // An HTML Element or HTML element ID to render the map in https://maplibre.org/maplibre-gl-js-docs/api/map/
-      center: [-73.98597609730648, 40.751874635721734], // center in New York
-      zoom: 11,
+      center: [10.401920000000075, 
+        63.419610000000034], // center in New York
+      zoom: 10,
   })
-  map.addControl(createAmplifyGeocoder());}
+  map.addControl(createAmplifyGeocoder());
+  map.addControl(new maplibregl.NavigationControl());
+  map.on("load", function(){
+    drawPoints("mySourceName", // Arbitrary source name
+        [
+            {
+              coordinates: [10.401920000000076, 
+                63.419610000000034], // [Longitude, Latitude]
+            },/*{
+              coordinates: [10.412930000000075, 
+                63.419610000000034], // [Longitude, Latitude]
+            },
+            {
+              coordinates: [10.423920000000074, 
+                63.419610000000034], // [Longitude, Latitude]
+            },
+            {
+              coordinates: [10.434920000000077, 
+                63.419610000000034], // [Longitude, Latitude]
+            },
+            {
+              coordinates: [10.445920000000078, 
+                63.419610000000034], // [Longitude, Latitude]
+            },
+            {
+              coordinates: [10.456920000000079, 
+                63.419610000000034], // [Longitude, Latitude]
+            },*/
+        ], // An array of coordinate data, an array of Feature data, or an array of [NamedLocations](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8)
+        map,
+        {
+            showCluster: true,
+            unclusteredOptions: {
+                showMarkerPopup: true,
+            },
+            clusterOptions: {
+                showCount: true,
+            },
+        }
+    );
+    //SINGLECELL
+    let _center = turf.point([10.43866796541505, 
+      63.42156251436995]);
+    let _radius = 5;
+    let _options = {
+      steps: 80,
+      units: 'kilometers' // or "mile"
+    };
 
-async function updateTracker() {
+    let _circle = turf.circle(_center, _radius);
+
+    map.addSource("circleData", {
+          type: "geojson",
+          data: _circle,
+        });
+
+    map.addLayer({
+          id: "circle-fill",
+          type: "fill",
+          source: "circleData",
+          paint: {
+            "fill-color": "rgb(246, 194, 112)",
+            "fill-opacity": 0.4
+          },
+        });
+
+  
+    //MULTICELL
+    let _center2 = turf.point([10.40840864, 
+      63.42123985]);
+    let _radius2 = 2.408;
+    let _options2 = {
+      steps: 80,
+      units: 'kilometers' // or "mile"
+    };
+    let _circle2 = turf.circle(_center2, _radius2);
+
+    map.addSource("circleData2", {
+      type: "geojson",
+      data: _circle2,
+    });
+
+    map.addLayer({
+      id: "circle-fill2",
+      type: "fill",
+      source: "circleData2",
+      paint: {
+        "fill-color": "rgb(229, 99, 153)",
+        "fill-opacity": 0.4,
+      },
+    });
+  })
+
+  Geo.getAvailableMaps();
+  map.setStyle("map0dd2b65d-loginenv");
+  map.resize();
+
+}
+/*
+async function searchPlaceIndexForPosition() {
   // Send device position updates
   const credentials = await Auth.currentCredentials();
   var location = new AWS.Location({
@@ -38,31 +139,33 @@ async function updateTracker() {
     region: awsconfig.aws_project_region 
     });
     const params = {
-      IndexName: "LenasPlaceIndex-dev",
-      Position: [78.6165983, 13.2783941]
+      IndexName: "LenasPlaceIndex-loginenv",
+      Position: [10.401920000000075, 
+        63.419610000000034
+        ]
     };
     location.searchPlaceIndexForPosition(params, (err:Error, data:object) => {
       if (err) console.error(err)
       if (data) console.log(data)
+    });
+    const rsp = await location.batchUpdateDevicePosition({
+      TrackerName: "MyTracker",
+      Updates: [
+        {
+          DeviceId: "ExampleDevice-12",
+          Position: [-125.4567, 47.6789],
+          SampleTime: "2022-03-15T12:09:07.327Z"
+        },
+        {
+          DeviceId: "ExampleDevice-12",
+          Position: [-125.123, 49.123],
+          SampleTime: "2022-03-15T12:10:32Z"
+        } 
+      ]
     })
-  const rsp = await location.batchUpdateDevicePosition({
-  TrackerName: "MyTracker",
-  Updates: [
-    {
-      DeviceId: "ExampleDevice-12",
-      Position: [-123.4567, 45.6789],
-      SampleTime: "2022-02-14T19:09:07.327Z"
-    },
-    {
-      DeviceId: "ExampleDevice-23",
-      Position: [-123.123, 45.123],
-      SampleTime: "2022-02-14T19:10:32Z"
-    } 
-  ]
-})
-.promise()
-}
-
+    .promise()
+    }*/
+/*
 async function calculateRoute() {
   const credentials = await Auth.currentCredentials();
     var location = new AWS.Location({
@@ -81,8 +184,9 @@ async function calculateRoute() {
     if (data) console.log(data.Legs[0]);
   });
 }
-
-async function showGeofences() {
+*/
+/*
+async function listGeofences(): Promise<void> {
   const credentials = await Auth.currentCredentials();
     var location = new AWS.Location({
       credentials,
@@ -97,27 +201,45 @@ async function showGeofences() {
     if (err) console.log(err);
     if (data) console.log(data);
   });
+}*/
+
+async function listDeviceHistory() {
+  const credentials = await Auth.currentCredentials();
+    var location = new AWS.Location({
+      credentials,
+      region: awsconfig.aws_project_region 
+      }); 
+
+  let parameter = {
+    DeviceId: "ExampleDevice-12",
+    TrackerName: "MyTracker"
+  };
+
+  location.getDevicePositionHistory(parameter, (err:Error, data:object) => {
+    if (err) console.log(err);
+    if (data) console.log(data);
+  });
 }
 
-function App() {
+function App({signOut, user}: { signOut: (data?: Record<string | number | symbol, any> | undefined) => void; user: {username: string}; }) {
   useEffect(() => {
+    const multicell = {"lat":63.42123985,"lng":10.40840864,"accuracy":2408};
+    const singlecell = {"lat":63.42156251436995,"lng":10.43866796541505,"accuracy":5000}
     const map = initializeMap();
-    const trackerupdate = updateTracker();
-    const calculateroute = calculateRoute();
-    const showGeo = showGeofences();
+    //const trackerupdate = searchPlaceIndexForPosition();
+    //const calculateroute = calculateRoute();
+    //const showGeo = listGeofences();
+    const deviceHistory = listDeviceHistory();
   }, []);
   return (
-    <div className="App">
-      <h1>My Restaurant</h1>
-            <ul id="locations">
-                <li><b>My Restaurant - Upper East Side</b> <br/> 300 E 77th St, New York, NY 10075 </li>
-                <li><b>My Restaurant - Hell's Kitchen</b> <br/> 725 9th Ave, New York, NY 10019</li>
-                <li><b>My Restaurant - Lower East Side</b><br/> 102 Norfolk St, New York, NY 10002</li>
-            </ul>
-            <div id="map"></div>
-            <h2>Route distance:</h2>
-    </div>
+   
+        <div className="App">
+          <h1> </h1>
+                <div id="map"></div>
+                <h1>Hello {user.username}</h1>
+                <button onClick={signOut}>Sign out</button>
+        </div>
   );
 }
 
-export default App;
+export default withAuthenticator(App);

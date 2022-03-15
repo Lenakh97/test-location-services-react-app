@@ -23,5 +23,23 @@
         }
       }
     }
+  },
+  "loginenv": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-locationservicestest-loginenv-83749-authRole",
+      "UnauthRoleArn": "arn:aws:iam::616334646261:role/amplify-locationservicestest-loginenv-83749-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::616334646261:role/amplify-locationservicestest-loginenv-83749-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-locationservicestest-loginenv-83749-deployment",
+      "UnauthRoleName": "amplify-locationservicestest-loginenv-83749-unauthRole",
+      "StackName": "amplify-locationservicestest-loginenv-83749",
+      "StackId": "arn:aws:cloudformation:us-east-2:616334646261:stack/amplify-locationservicestest-loginenv-83749/d1b6c920-a432-11ec-9fda-0ae8af29d0b4",
+      "AmplifyAppId": "d390c0awdyhb5m"
+    },
+    "categories": {
+      "auth": {
+        "locationservicestest45bf1fbf": {}
+      }
+    }
   }
 }

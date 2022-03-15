@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "locationservicestestfac9e0a3_identitypool_fac9e0a3",
-    "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "locatifac9e0a3",
-    "userPoolName": "locationservicestestfac9e0a3_userpool_fac9e0a3",
+    "identityPoolName": "locationservicestest45bf1fbf_identitypool_45bf1fbf",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "locati45bf1fbf",
+    "userPoolName": "locationservicestest45bf1fbf_userpool_45bf1fbf",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,29 +31,19 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "locatifac9e0a3_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "locati45bf1fbf_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "fac9e0a3",
-    "resourceName": "locationservicestestfac9e0a3",
+    "sharedId": "45bf1fbf",
+    "resourceName": "locationservicestest45bf1fbf",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
+    "usernameAttributes": [
+      "email"
+    ],
+    "triggers": {},
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true,
-    "authRoleArn": {
-      "Fn::GetAtt": [
-        "AuthRole",
-        "Arn"
-      ]
-    },
-    "unauthRoleArn": {
-      "Fn::GetAtt": [
-        "UnauthRole",
-        "Arn"
-      ]
-    },
-    "breakCircularDependency": true,
-    "dependsOn": []
+    "useEnabledMfas": true
   }
 }
