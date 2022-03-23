@@ -16,7 +16,6 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import "maplibre-gl-js-amplify/dist/public/amplify-geocoder.css"; // Optional CSS for Amplify recommended styling
 import awsconfig from './aws-exports';
-import cluster from 'cluster';
 import * as turf from "@turf/turf"
 
 const AWS = require("aws-sdk");
@@ -130,78 +129,6 @@ async function initializeMap() {
   map.resize();
 
 }
-/*
-async function searchPlaceIndexForPosition() {
-  // Send device position updates
-  const credentials = await Auth.currentCredentials();
-  var location = new AWS.Location({
-    credentials,
-    region: awsconfig.aws_project_region 
-    });
-    const params = {
-      IndexName: "LenasPlaceIndex-loginenv",
-      Position: [10.401920000000075, 
-        63.419610000000034
-        ]
-    };
-    location.searchPlaceIndexForPosition(params, (err:Error, data:object) => {
-      if (err) console.error(err)
-      if (data) console.log(data)
-    });
-    const rsp = await location.batchUpdateDevicePosition({
-      TrackerName: "MyTracker",
-      Updates: [
-        {
-          DeviceId: "ExampleDevice-12",
-          Position: [-125.4567, 47.6789],
-          SampleTime: "2022-03-15T12:09:07.327Z"
-        },
-        {
-          DeviceId: "ExampleDevice-12",
-          Position: [-125.123, 49.123],
-          SampleTime: "2022-03-15T12:10:32Z"
-        } 
-      ]
-    })
-    .promise()
-    }*/
-/*
-async function calculateRoute() {
-  const credentials = await Auth.currentCredentials();
-    var location = new AWS.Location({
-      credentials,
-      region: awsconfig.aws_project_region 
-      }); 
-
-  let parameter = {
-    CalculatorName: "route_calculator",
-    DeparturePosition: [-123.4567, 45.6789],
-    DestinationPosition: [-123.123, 45.123]
-  };
-
-  location.calculateRoute(parameter, (err:Error, data:{Legs: Array<object>, Summary: Object}) => {
-    if (err) console.log(err);
-    if (data) console.log(data.Legs[0]);
-  });
-}
-*/
-/*
-async function listGeofences(): Promise<void> {
-  const credentials = await Auth.currentCredentials();
-    var location = new AWS.Location({
-      credentials,
-      region: awsconfig.aws_project_region 
-      }); 
-
-  let parameter = {
-    CollectionName: "eta-geofence-collection"
-  };
-
-  location.listGeofences(parameter, (err:Error, data:object) => {
-    if (err) console.log(err);
-    if (data) console.log(data);
-  });
-}*/
 
 async function listDeviceHistory() {
   const credentials = await Auth.currentCredentials();
@@ -226,9 +153,6 @@ function App({signOut, user}: { signOut: (data?: Record<string | number | symbol
     const multicell = {"lat":63.42123985,"lng":10.40840864,"accuracy":2408};
     const singlecell = {"lat":63.42156251436995,"lng":10.43866796541505,"accuracy":5000}
     const map = initializeMap();
-    //const trackerupdate = searchPlaceIndexForPosition();
-    //const calculateroute = calculateRoute();
-    //const showGeo = listGeofences();
     const deviceHistory = listDeviceHistory();
   }, []);
   return (
