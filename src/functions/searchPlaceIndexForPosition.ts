@@ -1,4 +1,4 @@
-import './App.css';
+import '../App.css';
 import '@aws-amplify/ui-react/styles.css';
 import Amplify, { Auth } from 'aws-amplify';
 import "maplibre-gl/dist/maplibre-gl.css";

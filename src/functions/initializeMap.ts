@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import '../App.css';
 import { AmplifyProvider, withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import Amplify, { Auth } from 'aws-amplify';
@@ -35,15 +35,19 @@ export async function initializeMap() {
       drawPoints("mySourceName", // Arbitrary source name
           [
         {
-          coordinates: [-125.4567, 47.6789], // [Longitude, Latitude]
+          coordinates: [10.423926083872693,
+            63.432880226558886], // [Longitude, Latitude]
         },{
-          coordinates: [-125.123, 49.123], // [Longitude, Latitude]
+          coordinates: [10.391332538174396,
+            63.432927402342735], // [Longitude, Latitude]
         },
         {
-          coordinates: [-125.4567, 47.6589], // [Longitude, Latitude]
+          coordinates: [10.393864075703819,
+            63.42278282159667], // [Longitude, Latitude]
         },
         {
-          coordinates: [-125.123, 49.163], // [Longitude, Latitude]
+          coordinates: [10.430149446966979,
+            63.41693036059126], // [Longitude, Latitude]
         },
     ], // An array of coordinate data, an array of Feature data, or an array of [NamedLocations](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8)
           map,
