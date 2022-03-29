@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { MapSettingsProvider } from './hooks/useMapSettings';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MapSettingsProvider>
+      <App />
+    </MapSettingsProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
