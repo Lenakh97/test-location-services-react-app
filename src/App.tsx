@@ -16,6 +16,7 @@ import { initializeMap } from './functions/initializeMap';
 import { searchPlaceIndexForPosition } from './functions/searchPlaceIndexForPosition';
 import { reCenterOnPosition } from './functions/reCenterOnPosition';
 import { options } from './utils/options';
+import { Checkbox } from './components/Checkbox';
 
 const multicell = {"lat":63.42123985,"lng":10.40840864,"accuracy":2408};
 const singlecell = {"lat":63.42156251436995,"lng":10.43866796541505,"accuracy":5000}
@@ -122,15 +123,5 @@ function App({signOut, user}: { signOut: (data?: Record<string | number | symbol
         </div>
   );
 }
-
-const Checkbox: FunctionComponent<{checked: boolean, label: string, id: string, onClick: () => void}> = ({checked, label, id, onClick}) => <>
-  <input 
-  type="checkbox"
-  checked={checked}
-  id={id}
-  onChange={onClick}
-  />
-  <label htmlFor={id}>{label}</label>
-</>
 
 export default withAuthenticator(App);
