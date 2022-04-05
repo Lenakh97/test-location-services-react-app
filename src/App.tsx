@@ -1,6 +1,6 @@
 import { FunctionComponent, useRef } from 'react';
 import './App.css';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import { ComponentPropsToStylePropsMapKeys, withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect } from 'react';
@@ -15,9 +15,11 @@ import { makeCircle } from './functions/makeCircle';
 import { nanoid } from 'nanoid'
 
 const multicell:GeoLocation = {"lat":63.42123985,"lng":10.40840864,"accuracy":2408, source: 'multicell'};
-const singlecell1:GeoLocation = {"lat":63.42156251436995,"lng":10.43866796541505,"accuracy":5000, source: 'singlecell'}
-const singlecell2:GeoLocation = {"lat":63.92156251436995,"lng":10.43866796541505,"accuracy":5000, source: 'singlecell'}
-const gnss:GNSSGeoLocation = {"lat":63.42123985,"lng":10.40840864,"accuracy":100, source: 'gnss', hdg:182};
+const singlecell1:GeoLocation = {"lat":63.42156251436995,"lng":10.43866796541505,"accuracy":5000, source: 'singlecell'};
+const singlecell2:GeoLocation = {"lat":63.92156251436995,"lng":10.43866796541505,"accuracy":5000, source: 'singlecell'};
+const gnss:GNSSGeoLocation = {"lat":63.42123985,"lng":10.40840864,"accuracy":20, source: 'gnss', hdg:182};
+const headingX = gnss.lat+(3 * Math.cos((((gnss.hdg - 90) % 360) * Math.PI) / 180));
+const headingY = gnss.lng+(3 * Math.sin((((gnss.hdg - 90) % 360) * Math.PI) / 180));
 
 const mapStyle = "map0dd2b65d-loginenv"
 
@@ -25,6 +27,8 @@ function App({signOut, user}: { signOut: (data?: Record<string | number | symbol
   
   const {settings} = useMapSettings()
 
+  console.log(headingX)
+  console.log(headingY)
   console.log(settings.multicell)
   console.log(settings.singlecell)
 
@@ -54,8 +58,6 @@ function App({signOut, user}: { signOut: (data?: Record<string | number | symbol
     if (source === 'gnss') return true
     return false
   }) as GNSSGeoLocation[]
-
-  console.log(locationsWithHeading)
   
   return (
    
@@ -121,6 +123,9 @@ const Map: FunctionComponent<{
           if (geoLocation.source === 'multicell') {
             fillColor = "rgb(229, 99, 153)"
           }
+          if (geoLocation.source === 'gnss') {
+            fillColor = "#1f56d2"
+          }
           map.addLayer({
                 id: id,
                 type: "fill",
@@ -130,9 +135,36 @@ const Map: FunctionComponent<{
                   "fill-opacity": 0.4
                 },
               });
-        for(const heading in headingMarker){
-          //Do something
         }
+        for(const heading of headingMarker){
+          const id = nanoid()
+          map.addSource(`${id}-headingRoute`,{
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [heading.lng, heading.lat],
+                  [headingY, headingX]
+                ]
+              }
+            } 
+          })
+          map.addLayer({
+            id: `${id}-headingRoute`,
+            type: 'line',
+            source: `${id}-headingRoute`,
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round' 
+            },
+            paint: {
+              'line-color': 'black',
+              'line-width': 1
+            }
+          })
         }
         map.resize()
       })
