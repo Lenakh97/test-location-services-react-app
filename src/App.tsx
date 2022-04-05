@@ -17,6 +17,8 @@ import { nanoid } from 'nanoid'
 const multicell:GeoLocation = {"lat":63.42123985,"lng":10.40840864,"accuracy":2408, source: 'multicell'};
 const singlecell1:GeoLocation = {"lat":63.42156251436995,"lng":10.43866796541505,"accuracy":5000, source: 'singlecell'}
 const singlecell2:GeoLocation = {"lat":63.92156251436995,"lng":10.43866796541505,"accuracy":5000, source: 'singlecell'}
+const gnss:GNSSGeoLocation = {"lat":63.42123985,"lng":10.40840864,"accuracy":100, source: 'gnss', hdg:182};
+
 const mapStyle = "map0dd2b65d-loginenv"
 
 function App({signOut, user}: { signOut: (data?: Record<string | number | symbol, any> | undefined) => void; user: {username: string}; }) {
@@ -24,21 +26,42 @@ function App({signOut, user}: { signOut: (data?: Record<string | number | symbol
   const {settings} = useMapSettings()
 
   console.log(settings.multicell)
+  console.log(settings.singlecell)
+
+  const locations: (GeoLocation|GNSSGeoLocation)[] = [
+    singlecell1,
+    singlecell2,
+    multicell,
+    gnss
+  ]
+
+  const locationsToShowOnMap = locations
+  .filter(({source}) => {
+    switch(source) {
+      case 'multicell':
+        return (settings.multicell)
+      case 'singlecell':
+        return settings.singlecell
+      case 'gnss':
+        return settings.GNSS
+      default:
+        return false
+    }
+  })
+
+  const locationsWithHeading: GNSSGeoLocation[] = locations.filter(({source}): boolean => {
+    if (!settings.headingMarker) return false
+    if (source === 'gnss') return true
+    return false
+  }) as GNSSGeoLocation[]
+
+  console.log(locationsWithHeading)
   
   return (
    
         <div className="App">
           <h1> </h1>
-                <Map geoLocations={[
-                  singlecell1,
-                  singlecell2,
-                  multicell
-                ].filter(({source}) => {
-                  if (settings.multicell) return true
-                  if (source !== 'multicell') return true
-                  return false
-                })
-                } mapStyle={mapStyle} />
+                <Map geoLocations={locationsToShowOnMap} headingMarker={locationsWithHeading} mapStyle={mapStyle} />
                 <h1>Hello {user.username}</h1>     
                 <MapSettings /> 
                 <button onClick={signOut}>Sign out</button>          
@@ -53,12 +76,19 @@ type GeoLocation = {
   lng: number
   accuracy: number
   source: 'singlecell' | 'multicell' | 'gnss'
+  
+}
+
+type GNSSGeoLocation = GeoLocation & {
+  source: 'gnss'
+  hdg: number
 }
 
 const Map: FunctionComponent<{
   geoLocations: GeoLocation[]
+  headingMarker: GNSSGeoLocation[]
   mapStyle: string
-}> = ({geoLocations, mapStyle}) => {
+}> = ({geoLocations, headingMarker, mapStyle}) => {
 
   const divRef = useRef<HTMLDivElement>(null)
 
@@ -100,6 +130,9 @@ const Map: FunctionComponent<{
                   "fill-opacity": 0.4
                 },
               });
+        for(const heading in headingMarker){
+          //Do something
+        }
         }
         map.resize()
       })
