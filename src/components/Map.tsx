@@ -10,6 +10,7 @@ import { createAmplifyGeocoder, createMap } from 'maplibre-gl-js-amplify';
 import { nanoid } from 'nanoid';
 import { makeCircle } from '/home/leha/Documents/coding-projects/test-location-services-react-app/src/functions/makeCircle';
 import {GeoLocation, GNSSGeoLocation} from '../App'
+import { geometry } from '@turf/turf';
 
 const gnss:GNSSGeoLocation = {"lat":63.42123985,"lng":10.40840864,"accuracy":20, source: 'gnss', hdg:180};
 
@@ -57,6 +58,8 @@ export const Map: FunctionComponent<{
           for(const geoLocation of geoLocations) {
             const id = nanoid()
             const circle = makeCircle(geoLocation.lng, geoLocation.lat, geoLocation.accuracy)         
+            
+            //Add geoCircles
             map.addSource(`${id}-data`, {
               type: "geojson",
               data: circle,
@@ -78,6 +81,7 @@ export const Map: FunctionComponent<{
                     "fill-opacity": 0.4
                   },
                 });
+            
             //Add onclick popup
             map.on('click', id, function(e){
               new maplibregl.Popup()
@@ -97,15 +101,19 @@ export const Map: FunctionComponent<{
                         "<b>Time:</b>" + roaming.ts)
               .addTo(map);
             })
+
             // Change the cursor to a pointer when the mouse is over the states layer.
             map.on('mouseenter', id, function () {
               map.getCanvas().style.cursor = 'pointer';
               });
+
             // Change it back to a pointer when it leaves.
             map.on('mouseleave', id, function () {
             map.getCanvas().style.cursor = '';
             });  
           }
+
+          //Add headingmarkers
           for(const heading of headingMarker){
             const id = nanoid()
             map.addSource(`${id}-headingRoute`,{
@@ -132,10 +140,43 @@ export const Map: FunctionComponent<{
               },
               paint: {
                 'line-color': 'black',
-                'line-width': 1
+                'line-width': 1,
               }
             })
           }
+          
+          //add history
+          map.addSource(`history`,{
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [10.401920000000075, 63.419610000000034],
+                  [10.421924000001075, 63.429611000100034],
+                  [10.403922000002075, 63.439612000200034],
+                  [10.426929000003075, 63.459613000300034],
+                  [10.401920000004075, 63.4196106000400034]
+                ]
+              }
+            } 
+        })
+        map.addLayer({
+            id: `history`,
+            type: 'line',
+            source: `history`,
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round' 
+            },
+            paint: {
+              'line-color': 'dark blue',
+              'line-width': 1,
+              'line-dasharray': [10,4]
+            }
+          })
           })
           map.resize()
       })
