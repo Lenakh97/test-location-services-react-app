@@ -9,7 +9,9 @@ import "maplibre-gl-js-amplify/dist/public/amplify-geocoder.css"; // Optional CS
 import { createAmplifyGeocoder, createMap } from 'maplibre-gl-js-amplify';
 import { nanoid } from 'nanoid';
 import { makeCircle } from '/home/leha/Documents/coding-projects/test-location-services-react-app/src/functions/makeCircle';
-import {GeoLocation, GNSSGeoLocation, gnss} from '../App'
+import {GeoLocation, GNSSGeoLocation} from '../App'
+
+const gnss:GNSSGeoLocation = {"lat":63.42123985,"lng":10.40840864,"accuracy":20, source: 'gnss', hdg:180};
 
 const roaming = {roaming: {
     "name": "LenaThingy",
@@ -84,6 +86,7 @@ export const Map: FunctionComponent<{
                         "<b>Accuracy:</b>" + geoLocation.accuracy + "<br />" +
                         "<b>Time:</b>" + "about 1 month ago" + "<br />" +
                         "<b>Source:</b>" + geoLocation.source + "<br />" +
+                        "<a href='https://www.google.com/maps/search/?api=1&query=" + geoLocation.lat + "," + geoLocation.lng + "' target='_blank'> View location in google maps <a/> " +
                         "<b>Connection:</b>" + roaming.roaming.rsrp + "<br />" + 
                         "<b>Network:</b>" + roaming.roaming.network + "<br />" +
                         "<b>Band:</b>"+ roaming.roaming.band + "<br />" + 
