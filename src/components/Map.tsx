@@ -136,12 +136,6 @@ export const Map: FunctionComponent<{
               }
             })
           }
-          for(const geoLocation of geoLocations) {
-            console.log(geoLocation)
-            const id = nanoid()
-            
-          }
-          
           })
           map.resize()
       })
