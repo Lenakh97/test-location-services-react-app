@@ -11,6 +11,7 @@ import { GeoLocation, GNSSGeoLocation } from "../App";
 import { addHistory } from "../functions/addHistory";
 import { addHeadingmarker } from "../functions/addHeadingmarker";
 import { addGeoCircles } from "../functions/addGeoCircles";
+import { addIconMarker } from "../functions/addIconMarker";
 
 const gnss: GNSSGeoLocation = {
   lat: 63.42123985,
@@ -58,6 +59,8 @@ export const Map: FunctionComponent<{
 
       map.on("load", () => {
         console.log("map is loaded");
+        //Add Marker
+        addIconMarker(map, gnss);
 
         //Add geocircles for multicell and singlecell with onclick information
         addGeoCircles(geoLocations, map);
