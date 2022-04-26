@@ -34,15 +34,15 @@ const gnssHistory = [
   },
 ];
 
-export function drawHistory(
+export function addHistory(
   locationHistory: GeoLocation[],
   map: maplibregl.Map
 ) {
   for (const history of locationHistory) {
     const id = nanoid();
-    const arr = [];
+    const coordinatesArray = [];
     for (const position of gnssHistory) {
-      arr.push(position.Position);
+      coordinatesArray.push(position.Position);
     }
     //add history
     map.addSource(`${id}-history`, {
@@ -52,7 +52,7 @@ export function drawHistory(
         properties: {},
         geometry: {
           type: "LineString",
-          coordinates: arr,
+          coordinates: coordinatesArray,
         },
       },
     });
