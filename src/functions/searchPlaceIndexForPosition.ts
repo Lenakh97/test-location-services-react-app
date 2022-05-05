@@ -25,19 +25,20 @@ export async function searchPlaceIndexForPosition() {
     if (err) console.error(err);
     if (data) console.log(data);
   });
-  const rsp = await location
+
+  await location
     .batchUpdateDevicePosition({
       TrackerName: "MyTracker",
       Updates: [
         {
           DeviceId: "ExampleDevice-23",
-          Position: [-125.4567, 47.6789],
-          SampleTime: "2022-04-23T09:09:07.327Z",
+          Position: [10.401920000004075, 63.4196106000400034],
+          SampleTime: "2022-05-04T13:10:07.327Z",
         },
         {
           DeviceId: "ExampleDevice-12",
-          Position: [-125.124, 49.124],
-          SampleTime: "2022-04-23T09:15:32Z",
+          Position: [-125.3124, 49.324],
+          SampleTime: "2022-05-04T22:15:32Z",
         },
       ],
     })
