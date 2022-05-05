@@ -12,6 +12,7 @@ import { addHistory } from "../functions/addHistory";
 import { addHeadingmarker } from "../functions/addHeadingmarker";
 import { addGeoCircles } from "../functions/addGeoCircles";
 import { addIconMarker } from "../functions/addIconMarker";
+import { listDeviceHistory } from "../functions/listDeviceHistory";
 
 const gnss: GNSSGeoLocation = {
   lat: 63.42123985,
@@ -57,8 +58,12 @@ export const Map: FunctionComponent<{
       map.addControl(new maplibregl.NavigationControl());
       map.setStyle(mapStyle);
 
-      map.on("load", () => {
+      map.on("load", async () => {
         console.log("map is loaded");
+
+        let data = await listDeviceHistory();
+        console.log("xxx", data);
+
         //Add Marker
         addIconMarker(map, gnss);
 
@@ -74,6 +79,7 @@ export const Map: FunctionComponent<{
         //draw history
         addHistory(locationsWithGNSSHistory, map);
       });
+
       map.resize();
     });
 
