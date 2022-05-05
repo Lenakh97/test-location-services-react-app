@@ -1,5 +1,5 @@
 import "./App.css";
-import { withAuthenticator } from "@aws-amplify/ui-react";
+import { Button, withAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -8,6 +8,7 @@ import "maplibre-gl-js-amplify/dist/public/amplify-geocoder.css"; // Optional CS
 import { useMapSettings } from "./hooks/useMapSettings";
 import { MapSettings } from "./components/MapSettings";
 import { Map } from "./components/Map";
+import { useEffect, useState } from "react";
 
 export type GeoLocation = {
   lat: number;
@@ -106,7 +107,6 @@ const singlecell_history5: GeoLocation = {
   accuracy: 5000,
   source: "singlecell",
 };
-const mapStyle = "map0dd2b65d-loginenv";
 
 function App({
   signOut,
@@ -116,6 +116,7 @@ function App({
   user: { username: string };
 }) {
   const { settings } = useMapSettings();
+  const [mapStyle, setMapStyle] = useState("map0dd2b65d-loginenv");
 
   const locations: (GeoLocation | GNSSGeoLocation)[] = [
     singlecell1,
@@ -182,6 +183,29 @@ function App({
   return (
     <div className="App">
       <h1> </h1>
+      <>
+        <Button
+          onClick={() => {
+            setMapStyle("map0dd2b65d-loginenv");
+          }}
+        >
+          Normal Map
+        </Button>
+        <Button
+          onClick={() => {
+            setMapStyle("LenasDarkMap");
+          }}
+        >
+          Dark mode
+        </Button>
+        <Button
+          onClick={() => {
+            setMapStyle("LenasFlightPhotoMap");
+          }}
+        >
+          Flight Photo
+        </Button>
+      </>
       <Map
         geoLocations={locationsToShowOnMap}
         headingMarker={locationsWithHeading}
